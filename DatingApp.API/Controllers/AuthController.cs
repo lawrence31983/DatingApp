@@ -70,7 +70,7 @@ namespace DatingApp.API.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddHours(1), 
+                Expires = DateTime.UtcNow.AddHours(1), 
                 SigningCredentials = creds
 
             };
