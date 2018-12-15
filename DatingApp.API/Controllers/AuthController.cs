@@ -24,7 +24,7 @@ namespace DatingApp.API.Controllers
             _repo = repo;
 
         }
-
+        
         [HttpPost("register")]
         //Remember that u can use [FromBody] attribute if its not reading it. 
         public async Task<IActionResult> Register(UserForRegisterDTO userForRegisterDTO)
