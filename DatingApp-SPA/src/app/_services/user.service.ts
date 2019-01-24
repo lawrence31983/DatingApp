@@ -5,11 +5,7 @@ import { Observable } from 'rxjs';
 import { User } from '../_models/User';
 
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Authorization': 'Bearer ' + localStorage.getItem('token')
-  })
-};
+
 
 @Injectable({
   providedIn: 'root'
@@ -19,10 +15,10 @@ baseUrl = environment.apiURL;
 constructor(private http: HttpClient) { }
 
 getUsers(): Observable<User[]> {
-  return this.http.get<User[]>(this.baseUrl + 'users', httpOptions);
+  return this.http.get<User[]>(this.baseUrl + 'users');
 }
 
 getUser(id: number): Observable<User> {
-  return this.http.get<User>(this.baseUrl + 'users/' + id.toString(), httpOptions);
+  return this.http.get<User>(this.baseUrl + 'users/' + id.toString());
 }
 }
