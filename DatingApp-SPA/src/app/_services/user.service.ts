@@ -25,4 +25,9 @@ getUser(id: number): Observable<User> {
 updateUser(id: number, user: User) {
   return this.http.put(this.baseUrl + 'users/' + id.toString(), user);
 }
+
+setMainPhoto(userId: number, id: number){
+  return this.http.put(this.baseUrl + 'users/' + userId.toString() + '/photos/' + id.toString() + '/setMain', {});
+}
+
 }
