@@ -8,14 +8,14 @@
            "type": "chrome",
            "request": "launch",
            "name": "Launch Chrome",
-           "url": "http://localhost:4200",
-           "webRoot": "${workspaceFolder}"
+           "url": "localhost:4200",           
+           "webRoot": "${workspaceFolder}/DatingApp.SPA"
        },
        {
            "type": "chrome",
            "request": "attach",
            "name": "Attach to Chrome",
-           "url": "http://localhost:4200",
+           "url": "localhost:4200",
            "webRoot": "${workspaceFolder}"
        },
         {
