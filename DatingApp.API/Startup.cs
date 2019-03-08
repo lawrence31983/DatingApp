@@ -56,6 +56,7 @@ namespace DatingApp.API
                    ValidateAudience = false
                 };
             });
+            services.AddScoped<LogUserActivity>();
             //commented out as this supresses the controlers auto validation. only uncomment if you need to debug. 
             //services.Configure<ApiBehaviorOptions>(options =>
             //{
