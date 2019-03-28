@@ -57,7 +57,7 @@ currentMain: Photo;
         this.photos.push(photo);
         if (photo.isMain) {
           this.authService.changeMemberPhoto(photo.url);
-          this.authService.currentUser.photoURL = photo.url;
+          this.authService.currentUser.photoUrl = photo.url;
           localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
         }
       }
@@ -72,7 +72,7 @@ currentMain: Photo;
       this.currentMain.isMain = false;
       photo.isMain = true;
       this.authService.changeMemberPhoto(photo.url);
-      this.authService.currentUser.photoURL = photo.url;
+      this.authService.currentUser.photoUrl = photo.url;
       localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
     }, error => {
       this.alertify.error(error);
