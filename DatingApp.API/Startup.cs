@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using DatingApp.API.Helpers;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace DatingApp.API
 {
@@ -35,6 +36,40 @@ namespace DatingApp.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DataContext>(x => x.
+                UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning)));       
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).
+                AddJsonOptions( opt => {
+                    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
+            services.BuildServiceProvider().GetService<DataContext>().Database.Migrate();
+            services.AddCors();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+            services.AddAutoMapper();
+            services.AddTransient<Seed>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IDatingRepository,DatingRepository>();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) 
+            .AddJwtBearer(options =>{
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                   ValidateIssuerSigningKey = true,
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)), 
+                   ValidateIssuer = false,
+                   ValidateAudience = false
+                };
+            });
+            services.AddScoped<LogUserActivity>();
+            //commented out as this supresses the controlers auto validation. only uncomment if you need to debug. 
+            //services.Configure<ApiBehaviorOptions>(options =>
+            //{
+            //    options.SuppressModelStateInvalidFilter = true;
+            //});
+        }
+
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
             services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));       
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).
                 AddJsonOptions( opt => {
@@ -46,7 +81,7 @@ namespace DatingApp.API
             services.AddTransient<Seed>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDatingRepository,DatingRepository>();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) 
             .AddJwtBearer(options =>{
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -89,10 +124,17 @@ namespace DatingApp.API
             }
 
             //app.UseHttpsRedirection();
-            //seeder.SeedUsers(); //Uncomment to reseed database, be sure to do a ef database drop and update first
+            seeder.SeedUsers(); //Uncomment to reseed database, be sure to do a ef database drop and update first
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseMvc(routes => {
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback", 
+                    defaults: new { controller = "Fallback", action = "Index"}
+                );
+            });
             
         }
     }
