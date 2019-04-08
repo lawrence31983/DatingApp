@@ -14,7 +14,7 @@ import { Message } from '../_models/message';
   providedIn: 'root'
 })
 export class UserService {
-baseUrl = environment.apiURL;
+baseUrl = environment.apiUrl;
 constructor(private http: HttpClient) { }
 
 getUsers(page?, itemsPerPage?, userParams?, likesParam?): Observable<PaginatedResult<User[]>> {

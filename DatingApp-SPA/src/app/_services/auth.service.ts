@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {BehaviorSubject} from 'rxjs';
 import {map} from 'rxjs/operators';
-import { analyzeAndValidateNgModules } from '@angular/compiler';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/User';
@@ -10,7 +9,7 @@ import { User } from '../_models/User';
   providedIn: 'root'
 })
 export class AuthService {
-  baseURL =  environment.apiURL + 'auth/';
+  baseURL =  environment.apiUrl + 'auth/';
   jwtHelper = new JwtHelperService();
   decodedToken: any;
   currentUser: User;
